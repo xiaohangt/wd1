@@ -1,3 +1,18 @@
+# Authors's stuff
+__pycache__
+checkpoints
+wandb
+.ipynb_checkpoints/
+install*
+log
+eval_results
+data
+data/
+.venv/
+.venv
+Commands.md
+
+## common pattern
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
