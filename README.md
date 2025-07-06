@@ -29,7 +29,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 accelerate launch --config_file ddp_config.yaml --m
 ## wd1
 You must change the data directory for all the bash scripts. Change it based on your path. Or you could just export it before the run with this command.
 ```
-export BASE_DATA=/home/rares/diffusion-rl/data
+export BASE_DATA=/home/diffusion-rl/data
 ```
 Otherwise the code will use the default.
 
