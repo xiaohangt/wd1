@@ -1,5 +1,12 @@
-# wd1
-Official Implementation of wd1
+
+<div  align="center">
+    <h1>wd1:  Weighted Policy Optimization for Diffusion Language Models Reasoning</h1>
+  <p>We introduce wd1, a novel policy optimization approach that reformulates the objective as a weighted likelihood, requiring only a single approximation for the current parametrized policy likelihood</p>
+</div>
+
+
+
+![Results](media/comparison.pdf)
 
 
 ## Environment Setup
