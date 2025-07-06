@@ -6,7 +6,7 @@
 
 
 
-![Results](media/comparison.png)
+![Results](media/comparison.pdf)
 
 
 ## Environment Setup
