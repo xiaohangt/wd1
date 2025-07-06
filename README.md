@@ -42,6 +42,9 @@ bash run/wll_NP_{datasetname}.sh
 # Example
 bash run/wll_NP_countdown.sh
 ```
+
+![Results](media/combined_rewards_plot_row.png)
+
 ### RL on top of SFT
 To run RL on top of SFT     
 ```
@@ -50,6 +53,8 @@ bash run/wll_SFT_NP_{datasetname}.sh
 # Example
 bash run/wll_SFT_NP_countdown.sh
 ```
+
+![Results](media/combined_rewards_plot_row_all.png)
 
 ## Evaluation
 
