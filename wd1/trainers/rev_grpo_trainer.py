@@ -225,15 +225,13 @@ class RevDiffuGRPOTrainer(GRPOTrainer):
                                 x_ = torch.cat([x, un_x], dim=0)
 
                                 # Get logits in a single forward pass
-                                with torch.no_grad():
-                                    logits = model(x_).logits
+                                logits = model(x_).logits
                                 logits, un_logits = torch.chunk(logits, 2, dim=0)
                                 logits = un_logits + (cfg_scale + 1) * (
                                     logits - un_logits
                                 )
                             else:
-                                with torch.no_grad():
-                                    logits = model(x).logits
+                                logits = model(x).logits
 
                             # Apply Gumbel noise for sampling
                             logits_with_noise = self.add_gumbel_noise(
@@ -452,21 +450,22 @@ class RevDiffuGRPOTrainer(GRPOTrainer):
     def _prepare_inputs(
         self, inputs: dict[str, Union[torch.Tensor, Any]]
     ) -> dict[str, Union[torch.Tensor, Any]]:
-        mode = "eval" if self.control.should_evaluate else "train"
-        if mode == "train":
-            if self.state.global_step % self.num_iterations == 0:
-                inputs = self._generate_and_score_completions(inputs)
-                self._buffered_inputs[
-                    self._step % self.args.gradient_accumulation_steps
-                ] = inputs
+        with torch.no_grad():
+            mode = "eval" if self.control.should_evaluate else "train"
+            if mode == "train":
+                if self.state.global_step % self.num_iterations == 0:
+                    inputs = self._generate_and_score_completions(inputs)
+                    self._buffered_inputs[
+                        self._step % self.args.gradient_accumulation_steps
+                    ] = inputs
+                else:
+                    inputs = self._buffered_inputs[
+                        self._step % self.args.gradient_accumulation_steps
+                    ]
+                self._step += 1
             else:
-                inputs = self._buffered_inputs[
-                    self._step % self.args.gradient_accumulation_steps
-                ]
-            self._step += 1
-        else:
-            # In evaluation, we don't reuse completions across multiple updates, so we don't need to buffer inputs.
-            inputs = self._generate_and_score_completions(inputs)
+                # In evaluation, we don't reuse completions across multiple updates, so we don't need to buffer inputs.
+                inputs = self._generate_and_score_completions(inputs)
         return inputs
 
     def _generate_and_score_completions(
