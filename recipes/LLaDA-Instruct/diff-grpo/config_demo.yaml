@@ -1,0 +1,90 @@
+# Model arguments
+model_name_or_path: GSAI-ML/LLaDA-8B-Instruct
+model_revision: main
+torch_dtype: bfloat16
+trust_remote_code: true
+ddp_find_unused_parameters: false
+# Data training arguments
+dataset_name: open-r1/OpenR1-Math-220k #DigitalLearningGmbH/MATH-lighteval, camel-ai/amc_aime_self_improving, AI-MO/NuminaMath-TIR
+dataset_train_split: train
+num_train_samples: 3000
+system_prompt: "Let's think step by step and output the final answer within \\boxed{}." #"Let's first think about the reasoning process as an internal monologue and then provide the user with the answer. Respond in the following format: <think>\n...\n</think>\n<answer>\n...\n</answer> and output the final answer within \\boxed{} inbetween the <answer> </answer> tags" #"Let's think step by step and output the final answer within \\boxed{}."
+# Diff-GRPO trainer config
+attn_implementation: flash_attention_2
+bf16: true
+save_only_model: true
+#Lora
+lora: false
+lora_r: 128
+lora_alpha: 64
+lora_dropout: 0.05
+peft_task_type: CAUSAL_LM
+
+sync_ref_model: true
+ref_model_sync_steps: 64
+
+adam_beta1: 0.9
+adam_beta2: 0.99
+weight_decay: 0.1
+max_grad_norm: 0.2
+
+use_vllm: false
+vllm_device: auto
+vllm_gpu_memory_utilization: 0.9
+
+warmup_ratio: 0.1
+logging_steps: 2
+learning_rate: 3e-6
+lr_scheduler_type: constant_with_warmup
+num_train_epochs: 1
+
+per_device_eval_batch_size: 1
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 16
+
+# Diffusion and GRPO-specific
+max_completion_length: 512
+max_prompt_length: 200
+block_length: 32
+diffusion_steps: 128
+remasking: low_confidence
+random_masking: true
+p_mask_prompt: 0.15
+beta: 0.04
+epsilon: 0.5
+generation_batch_size: 6
+num_generations: 6
+num_iterations: 1
+
+# Parameters for saving checkpoints
+save_steps: 100
+save_strategy: steps
+save_total_limit: 1
+temperature: 0.1
+do_eval: false
+
+gradient_checkpointing: false
+gradient_checkpointing_kwargs:
+  use_reentrant: false
+resume_from_checkpoint: false
+hub_model_id: LLaDA-8B-Instruct-MDPO-v3
+hub_strategy: every_save
+log_completions: true
+log_level: info
+logging_first_step: true
+logging_strategy: steps
+max_steps: -1
+
+output_dir: data/LLaDA-8B-Instruct-diffu-grpo
+overwrite_output_dir: true
+
+push_to_hub: false
+report_to:
+- wandb
+reward_funcs:
+- accuracy
+- tag_count
+reward_weights:
+- 1.0
+- 0.0
+seed: 42
